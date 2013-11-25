@@ -18,5 +18,4 @@ then
 	mkdir -p $PODCAST_DIR/$2
 fi
 
-echo $1
 wget --output-document=- --quiet $1 | grep mp3 | head -1 | sed -e "s/^.*\(http.*mp3\).*/\1/" | wget --input-file=- --quiet --output-document $PODCAST_DIR/$2/$2.`date +\%Y-\%m-\%d`.mp3
