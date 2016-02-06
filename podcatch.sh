@@ -18,4 +18,16 @@ then
 	mkdir -p $PODCAST_DIR/$2
 fi
 
-rsstail -n 1 -eu "$1" | grep 'http[s?]\://.*/'
+download_loop()
+{
+	while read url
+	do
+		line=$(echo "$url" | grep -o 'https\{0,1\}://.*$')
+		if [ "$line" ]
+		then
+			echo "$line"
+		fi
+	done
+}
+
+rsstail -n 1 -eu "$1" | download_loop
