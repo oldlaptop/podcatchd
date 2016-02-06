@@ -2,6 +2,8 @@
 
 # $1 should be the URL of the podcast RSS feed, $2 should be the podcast name.
 
+NAME="$2"
+
 # envvar PODCAST_DIR
 #
 # Directory in which the podcast should be deposited (will go in
@@ -15,17 +17,18 @@ export DATE=`date --iso-8601`
 
 if [ ! -d $PODCAST_DIR/$2 ]
 then
-	mkdir -p $PODCAST_DIR/$2
+	mkdir -p $PODCAST_DIR/$NAME
 fi
 
 download_loop()
 {
-	while read url
+	while read line
 	do
-		line=$(echo "$url" | grep -o 'https\{0,1\}://.*$')
-		if [ "$line" ]
+		url=$(echo "$line" | grep -o 'https\{0,1\}://.*$')
+		if [ "$url" ]
 		then
-			echo "$line"
+			ext="$(echo "$url" | grep -o '\.[[:alnum:]]*$')"
+			curl -L "$url" > "$NAME/$NAME.$DATE$ext"
 		fi
 	done
 }
