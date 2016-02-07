@@ -15,9 +15,9 @@ export PODCAST_DIR="."
 # Date to use in the podcast filename
 export DATE=$(date +%Y-%m-%d)
 
-if [ ! -d $PODCAST_DIR/$2 ]
+if [ ! -d "$PODCAST_DIR/$2" ]
 then
-	mkdir -p $PODCAST_DIR/$NAME
+	mkdir -p "$PODCAST_DIR/$NAME"
 fi
 
 download_loop()
