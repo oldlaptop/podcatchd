@@ -13,7 +13,7 @@ export PODCAST_DIR="."
 # envvar DATE
 #
 # Date to use in the podcast filename
-export DATE=`date --iso-8601`
+export DATE=$(date +%Y-%m-%d)
 
 if [ ! -d $PODCAST_DIR/$2 ]
 then
