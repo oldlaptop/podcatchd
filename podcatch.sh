@@ -28,7 +28,11 @@ download_loop()
 		if [ "$url" ]
 		then
 			ext="$(echo "$url" | grep -o '\.[[:alnum:]]*$')"
-			curl -L "$url" > "$NAME/$NAME.$DATE$ext"
+
+			if [ ! -e "$NAME/$NAME.$DATE$ext" ]
+			then
+				curl -L "$url" > "$NAME/$NAME.$DATE$ext"
+			fi
 		fi
 	done
 }
