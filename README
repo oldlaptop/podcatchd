@@ -1,7 +1,10 @@
-This is a basic commandline podcatcher. The long-range ominous plan is to make 
-a real honest-to-goodness daemon out of it, capable of handling multiple 
-podcasts, logging to actual syslog, and other fun things. For now there is a 
-basic event loop which can sit in a tmux window and download podcasts as they 
-come. POSIX sh, uses rsstail and requires a small rsstail patch from my rsstail 
-fork. Intended to be superior to other GUI-less podcatchers in its surpassing 
-simplicity.
+podcatchd is a surpassingly simple podcatcher written in POSIX sh. Unlike some
+non-GUI podcatchers, it's not a one-shot program you need to run from cron to
+truly follow a podcast; you simply leave it running on a server (either in a
+tmux/screen session or as a background daemon) and it slurps up podcasts as it
+sees them. Also unlike most podcatchers, it is itself less than 200 lines of
+code; the heavy work of parsing rss is done by the excellent rsstail tool
+(https://github.com/flok99/rsstail/ - currently needs the patch in pull request
+19). At the time of writing any POSIX-compliant system with a sane (and patched)
+rsstail and curl installed should work; other HTTP-fetching tools can trivially
+substitute for curl.
