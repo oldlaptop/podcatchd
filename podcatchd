@@ -14,26 +14,13 @@ set -e
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-PODCATCH_SH_PATH="${PODCATCH_SH_PATH:-.}"
+PODCATCHD_PATH="${PODCATCHD_PATH:-.}"
+LOG_DEST="stdout"
+#LOG_DEST="logger"
 
-log()
-{
-	# if (isatty (1))
-	if [ -t 1 ]
-	then
-		printf "%s\n" "$@"
-	else
-		logger "$@"
-	fi
-}
+export LOG_DEST PODCATCHD_PATH
 
-plog()
-{
-	while read line
-	do
-		log "$line"
-	done
-}
+. "$PODCATCHD_PATH/log.subr"
 
 die()
 {
@@ -73,14 +60,14 @@ do
 
 	if [ "$name" ]; then if [ "$url" ]
 	then
-		sh "${PODCATCH_SH_PATH}/podcatch.sh" "$url" "$name" 2>&1 | plog &
+		sh "${PODCATCHD_PATH}/podcatch.sh" "$url" "$name" 2>&1 &
 		pids="$! $pids"
 		name=""
 		url=""
 	fi;fi
 done < "$1"
 
-trap die TERM
+trap 'die' EXIT
 wait
 
 log "all podcatchers dead, exiting\n"

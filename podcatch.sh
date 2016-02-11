@@ -18,6 +18,8 @@ set -e
 # enclosures. Meant to be launched by podcatchd, but can work standalone.
 # $1 should be the URL of the podcast RSS feed, $2 should be the podcast name.
 
+. "$PODCATCHD_PATH/log.subr"
+
 NAME="$2"
 
 # envvar PODCAST_DIR
@@ -25,11 +27,6 @@ NAME="$2"
 # Directory in which the podcast should be deposited (will go in
 # $PODCAST_DIR/$2/$2.$DATE.mp3)
 export PODCAST_DIR="."
-
-# envvar DATE
-#
-# Date to use in the podcast filename
-export DATE=$(date +%Y-%m-%d)
 
 if [ ! -d "$PODCAST_DIR/$2" ]
 then
@@ -40,19 +37,29 @@ download_loop()
 {
 	while read line
 	do
-		echo "rsstail said $line"
+		date=$(date +%Y-%m-%d)
+		log "rsstail said $line"
 		url="$(echo "$line" | grep -o 'https\{0,1\}://.*$')" || true
 		if [ "$url" ]
 		then
 			ext="$(echo "$url" | grep -o '\.[[:alnum:]]*$')" || true
 
-			if [ ! -e "$NAME/$NAME.$DATE$ext" ]
+			if [ ! -e "$NAME/$NAME.$date.$ext" ]
 			then
-				echo "downloading $url to $PODCAST_DIR/$NAME/$NAME.$DATE$ext"
-				curl -sSL "$url" > "$PODCAST_DIR/$NAME/$NAME.$DATE$ext" 2>&1
+				log "downloading $url to $PODCAST_DIR/$NAME/$NAME.$date$ext"
+				curl -sSL "$url" -o "$PODCAST_DIR/$NAME/$NAME.$date$ext" 2>&1 | plog
 			fi
 		fi
 	done
 }
 
-rsstail -n 1 -eu "$1" | download_loop
+mkdir -m 700 "/tmp/podcatch.sh.$$"
+mkfifo /tmp/podcatch.sh.$$/rss.fifo
+
+rsstail -n 1 -eu "$1" > /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
+download_loop < /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
+
+trap 'kill $pids' EXIT
+
+wait
+
