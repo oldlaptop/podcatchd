@@ -27,13 +27,13 @@ die()
 	for pid in $pids
 	do
 		log "killing $pid"
-		kill $pid
+		kill "$pid"
 	done
 }
 
-if [ ! -f $1 ]
+if [ ! -f "$1" ]
 then
-	log "$0: invalid config file: $1\n"
+	log "$0: invalid config file: $1"
 	exit 1
 fi
 
@@ -70,4 +70,4 @@ done < "$1"
 trap 'die' EXIT
 wait
 
-log "all podcatchers dead, exiting\n"
+log "all podcatchers dead, exiting"

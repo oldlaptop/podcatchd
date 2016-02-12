@@ -35,7 +35,7 @@ fi
 
 download_loop()
 {
-	while read line
+	while read -r line
 	do
 		date=$(date +%Y-%m-%d)
 		log "rsstail said $line"
