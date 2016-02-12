@@ -59,7 +59,7 @@ mkfifo /tmp/podcatch.sh.$$/rss.fifo
 rsstail -n 1 -eu "$1" > /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
 download_loop < /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
 
-trap 'kill $pids' EXIT
+trap 'kill $pids; rm -rf /tmp/podcatch.sh.$$' EXIT
 
 wait
 
