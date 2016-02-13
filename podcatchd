@@ -14,11 +14,13 @@ set -e
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+SH=${SH:-/bin/sh}
+
 PODCATCHD_PATH="${PODCATCHD_PATH:-.}"
 LOG_DEST="stdout"
 #LOG_DEST="logger"
 
-export LOG_DEST PODCATCHD_PATH
+export LOG_DEST PODCATCHD_PATH SH
 
 . "$PODCATCHD_PATH/log.subr"
 
@@ -60,7 +62,7 @@ do
 
 	if [ "$name" ]; then if [ "$url" ]
 	then
-		sh "${PODCATCHD_PATH}/podcatch.sh" "$url" "$name" 2>&1 &
+		"${SH}" "${PODCATCHD_PATH}/podcatch.sh" "$url" "$name" 2>&1 &
 		pids="$! $pids"
 		name=""
 		url=""
