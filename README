@@ -6,6 +6,6 @@ sees them. Also unlike most podcatchers, it is itself less than 200 lines of
 code; the heavy work of parsing rss is done by the excellent rsstail tool
 (https://github.com/flok99/rsstail/ - you currently need to build from git,
 for RSS enclosure support). At the time of writing any POSIX-compliant system
-with a sane (and patched) rsstail and curl installed should work (though dash's
-trap handling appears to be buggy). Other HTTP-fetching tools can trivially
+with a sane (and sufficiently new) rsstail and curl installed should work (though
+dash's trap handling appears to be buggy). Other HTTP-fetching tools can trivially
 substitute for curl, but rsstail already depends on libcurl to fetch RSS feeds.
