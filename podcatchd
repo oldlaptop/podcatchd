@@ -17,10 +17,10 @@ set -e
 SH=${SH:-/bin/sh}
 
 PODCATCHD_PATH="${PODCATCHD_PATH:-.}"
-LOG_DEST="stdout"
-#LOG_DEST="logger"
+LOG_DEST="${LOG_DEST:-stdout}"
+PODCAST_DIR="${PODCAST_DIR:-.}"
 
-export LOG_DEST PODCATCHD_PATH SH
+export LOG_DEST PODCAST_DIR PODCATCHD_PATH SH
 
 . "$PODCATCHD_PATH/log.subr"
 
@@ -60,13 +60,13 @@ do
 			;;
 	esac
 
-	if [ "$name" ]; then if [ "$url" ]
+	if [ "$name" ] && [ "$url" ]
 	then
 		"${SH}" "${PODCATCHD_PATH}/podcatch.sh" "$url" "$name" 2>&1 &
 		pids="$! $pids"
 		name=""
 		url=""
-	fi;fi
+	fi
 done < "$1"
 
 trap 'die' EXIT

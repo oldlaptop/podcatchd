@@ -21,12 +21,7 @@ set -e
 . "$PODCATCHD_PATH/log.subr"
 
 NAME="$2"
-
-# envvar PODCAST_DIR
-#
-# Directory in which the podcast should be deposited (will go in
-# $PODCAST_DIR/$2/$2.$DATE.mp3)
-export PODCAST_DIR="."
+PODCAST_DIR="${PODCAST_DIR:-.}"
 
 if [ ! -d "$PODCAST_DIR/$2" ]
 then
