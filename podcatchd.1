@@ -1,0 +1,59 @@
+.Dd $Mdocdate$
+.Dt PODCATCHD 1
+.Os
+
+.Sh NAME
+.Nm podcatchd
+.Nd Download enclosures from one or more RSS feeds
+.Sh SYNOPSIS
+.Nm podcatchd
+.Ar config
+.Sh DESCRIPTION
+.Nm
+is a crude, but effective and surpassingly simple podcatcher; that is, a utility
+to download the enclosures in an RSS feed. Unlike some other non-GUI
+podcatchers,
+.Nm
+is not a one-shot program, which you would need to run in a cron(8) job or
+something similar in order to truly follow a podcast, but a long-running process
+which is meant to be run from a tmux session, or as a background daemon.
+
+The first argument must be the location of podcatchd's configuration file, which
+simply lists the name and URL of each podcast on separate lines, like so:
+
+.Bd -literal -offset -indent
+name: foo
+url: http://example.com/foo.rss
+
+name: bar
+url: http://example.com/bar.rss
+.Ed
+
+The order of the name: and url: fields is insignificant, and blank lines are
+ignored.
+.Sh ENVIRONMENT
+.Bl -hang -width "PODCATCHD_PATHXX" -compact
+.It Ev LOG_DEST
+When set to stdout, podcatchd will send log messages to its standard output;
+when set to logger, logs will be sent to syslog via logger(1).
+.It Ev PODCAST_DIR
+Directory to place new podcasts under, defaults to the current directory.
+Podcast files will be placed in subdirectories of PODCAST_DIR according to their
+names in the configuration file.
+.It Ev PODCATCHD_PATH
+Path where podcatchd is installed, defaults to the current directory. It is
+suggested that this default be changed for system-wide installations.
+.It Ev SH
+Path to the shell podcatchd should use; should have good POSIX trap support.
+Debian's dash(1) is known to be unsuitable; bash(1) and OpenBSD's ksh(1) work.
+.El
+.Sh BUGS
+Very little is enforced about the configuration file's syntax; malformed
+configuration files may yield surprising (though well-defined) behavior.
+
+Any ongoing podcast downloads will continue even after the main process dies,
+and shells such as dash(1) which implement 'trap EXIT' incorrectly may prevent
+any cleanup from happening at all.
+
+Up-to-date information on any issues can be found on the Github issue tracker:
+https://github.com/oldlaptop/podcatchd/issues
