@@ -16,13 +16,13 @@ log()
 {
 	if [ "$LOG_DEST" = "stdout" ]
 	then
-		printf "%s\n" "$@"
+		printf "[%s] %s\n" "$(date)" "$@"
 	elif [ "$LOG_DEST" = "logger" ]
 	then
 		logger "$@"
 	else
 		# fallback to stdout
-		printf "%s\n" "$@"
+		printf "[%s] %s\n" "$(date)" "$@"
 	fi
 }
 
