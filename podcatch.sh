@@ -39,7 +39,7 @@ download_loop()
 		then
 			ext="$(echo "$url" | grep -o '\.[[:alnum:]]*$')" || true
 
-			if [ ! -e "$NAME/$NAME.$date.$ext" ]
+			if [ ! -e "$NAME/$NAME.$date$ext" ]
 			then
 				log "downloading $url to $PODCAST_DIR/$NAME/$NAME.$date$ext"
 				curl -sSL "$url" -o "$PODCAST_DIR/$NAME/$NAME.$date$ext" 2>&1 | plog
