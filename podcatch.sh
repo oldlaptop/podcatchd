@@ -30,20 +30,38 @@ fi
 
 download_loop()
 {
+	url=
+	date=
 	while read -r line
 	do
-		date=$(date +%Y-%m-%d)
 		log "rsstail said $line"
-		url="$(echo "$line" | grep -o 'https\{0,1\}://.*$')" || true
-		if [ "$url" ]
-		then
-			ext="$(echo "$url" | grep -o '\.[[:alnum:]]*$')" || true
 
-			if [ ! -e "$NAME/$NAME.$date$ext" ]
+		if [ "$(echo "$line" | grep "Pub\\.date")" ]
+		then
+			date="${line##Pub.date: }"
+		fi
+
+		if [ "$(echo "$line" | grep -o 'https\{0,1\}://.*$')" ]
+		then
+			url="${line##Enclosure URL: }"
+		fi
+
+		if [ "$url" ] && [ "$date" ]
+		then
+			# Stupidly strip all URL parameters for extension-sensing purposes
+			url_noparams="${url%%\?*}"
+			ext="$(echo "$url_noparams" | grep -o '\.[[:alnum:]]*$')" || true
+
+			# Transform date to ISO format
+			date="$(date -d "$date" "+%Y-%m-%d")"
+
+			if [ ! -e "$PODCAST_DIR/$NAME/$NAME.$date$ext" ]
 			then
 				log "downloading $url to $PODCAST_DIR/$NAME/$NAME.$date$ext"
 				curl -sSL "$url" -o "$PODCAST_DIR/$NAME/$NAME.$date$ext" 2>&1 | plog
 			fi
+			url=
+			date=
 		fi
 	done
 }
@@ -51,10 +69,9 @@ download_loop()
 mkdir -m 700 "/tmp/podcatch.sh.$$"
 mkfifo /tmp/podcatch.sh.$$/rss.fifo
 
-rsstail -n 1 -eu "$1" > /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
+rsstail -n 1 -peu "$1" > /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
 download_loop < /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
 
 trap 'kill $pids; rm -rf /tmp/podcatch.sh.$$' EXIT
 
 wait
-
