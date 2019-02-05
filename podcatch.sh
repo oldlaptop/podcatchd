@@ -69,7 +69,7 @@ download_loop()
 mkdir -m 700 "/tmp/podcatch.sh.$$"
 mkfifo /tmp/podcatch.sh.$$/rss.fifo
 
-rsstail -n 1 -peu "$1" > /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
+rsstail -n 1 -Ppeu "$1" > /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
 download_loop < /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
 
 trap 'kill $pids; rm -rf /tmp/podcatch.sh.$$' EXIT
