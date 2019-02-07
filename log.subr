@@ -12,17 +12,19 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+DATE_FORMAT="+%a %Y-%m-%d %H:%M"
+
 log()
 {
 	if [ "$LOG_DEST" = "stdout" ]
 	then
-		printf "[%s] %s\n" "$(date)" "$@"
+		printf "[%s] %s\n" "$(date "$DATE_FORMAT")" "$@"
 	elif [ "$LOG_DEST" = "logger" ]
 	then
 		logger "$@"
 	else
 		# fallback to stdout
-		printf "[%s] %s\n" "$(date)" "$@"
+		printf "[%s] %s\n" "$(date "$DATE_FORMAT")" "$@"
 	fi
 }
 

@@ -30,11 +30,13 @@ fi
 
 download_loop()
 {
+	pid=$1
+	feed=$2
 	url=
 	date=
 	while read -r line
 	do
-		log "rsstail said $line"
+		log "rsstail[$pid] for <$feed> said: $line"
 
 		if [ "$(echo "$line" | grep "Pub\\.date")" ]
 		then
@@ -69,8 +71,8 @@ download_loop()
 mkdir -m 700 "/tmp/podcatch.sh.$$"
 mkfifo /tmp/podcatch.sh.$$/rss.fifo
 
-rsstail -n 1 -Ppeu "$1" > /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
-download_loop < /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
+rsstail -n 1 -Ppeu "$1" > /tmp/podcatch.sh.$$/rss.fifo 2>&1 & pids="$! $pids"
+download_loop $! $1 < /tmp/podcatch.sh.$$/rss.fifo & pids="$! $pids"
 
 trap 'kill $pids; rm -rf /tmp/podcatch.sh.$$' EXIT
 
