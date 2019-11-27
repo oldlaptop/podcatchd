@@ -63,6 +63,7 @@ do
 	if [ "$name" ] && [ "$url" ]
 	then
 		"${SH}" "${PODCATCHD_PATH}/podcatch.sh" "$url" "$name" 2>&1 &
+		sleep 1 # hopefully keep feeds from mixing in the log
 		pids="$! $pids"
 		name=""
 		url=""
