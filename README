@@ -3,9 +3,10 @@ non-GUI podcatchers, it's not a one-shot program you need to run from cron to
 truly follow a podcast; you simply leave it running on a server (either in a
 tmux/screen session or as a background daemon) and it slurps up podcasts as it
 sees them. Also unlike most podcatchers, it is itself less than 200 lines of
-code; the heavy work of parsing rss is done by the excellent rsstail tool
-(https://github.com/flok99/rsstail/ - you currently need to build from git,
-for RSS enclosure support).
+code; the heavy work of parsing rss is done by the excellent rsstail tool.
+Unfortunately my patch for enclosure support went in after the most recent
+release, and the author's GitHub repository seems to have vanished; you'll need
+to build from my mirror at https://github.com/oldlaptop/rsstail/ for the moment.
 
 At the time of writing any POSIX-compliant system with a sane (and sufficiently
 new) rsstail and curl installed should run podcatchd (though dash's trap
